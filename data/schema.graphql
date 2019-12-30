@@ -1,5 +1,182 @@
 type Query {
   rockets: [Rocket]
+  historiesResult: HistoriesResult!
+}
+
+type HistoriesResult {
+  result: Result
+  data: [History]
+}
+
+type History {
+  details: String
+  event_date_unix: String
+  event_date_utc: String
+  id: ID
+  links: Link
+  title: String
+  flight: Launch
+}
+
+type Launch {
+  details: String
+  id: ID
+  is_tentative: Boolean
+  launch_date_local: String
+  launch_date_unix: String
+  launch_date_utc: String
+  launch_site: LaunchSite
+  launch_success: Boolean
+  launch_year: String
+  links: LaunchLinks
+  mission_id: [String]
+  mission_name: String
+  rocket: LaunchRocket
+  static_fire_date_unix: String
+  static_fire_date_utc: String
+  telemetry: LaunchTelemetry
+  tentative_max_precision: String
+  upcoming: Boolean
+  ships: [Ship]
+}
+
+type Ship {
+  abs: Int
+  active: Boolean
+  attempted_landings: Int
+  class: Int
+  course_deg: Int
+  home_port: String
+  id: ID
+  image: String
+  imo: Int
+  missions: [ShipMission]
+  mmsi: Int
+  model: String
+  name: String
+  position: ShipLocation
+  roles: [String]
+  speed_kn: Float
+  status: String
+  successful_landings: Int
+  type: String
+  url: String
+  weight_kg: Int
+  weight_lbs: Int
+  year_built: Int
+}
+
+type ShipLocation {
+  latitude: Float
+  longitude: Float
+}
+
+type ShipMission {
+  flight: String
+  name: String
+}
+
+type LaunchSite {
+  site_id: String
+  site_name_long: String
+  site_name: String
+}
+
+type LaunchLinks {
+  article_link: String
+  flickr_images: [String]
+  mission_patch_small: String
+  mission_patch: String
+  presskit: String
+  reddit_campaign: String
+  reddit_launch: String
+  reddit_media: String
+  reddit_recovery: String
+  video_link: String
+  wikipedia: String
+}
+
+type LaunchRocket {
+  fairings: LaunchRocketFairings
+  first_stage: LaunchRocketFirstStage
+  rocket_name: String
+  rocket_type: String
+  rocket: Rocket
+  second_stage: LaunchRocketSecondStage
+}
+
+type LaunchRocketSecondStage {
+  block: Int
+  payloads: [Payload]
+}
+
+type LaunchRocketFirstStage {
+  cores: [LaunchRocketFirstStageCore]
+}
+
+type Payload{
+  customers: [String]
+  id: ID
+  manufacturer: String
+  nationality: String
+  norad_id: [Int]
+  orbit_params: PayloadOrbitParams
+  orbit: String
+  payload_mass_kg: Float
+  payload_mass_lbs: Float
+  payload_type: String
+  reused: Boolean
+}
+
+type PayloadOrbitParams{
+  apoapsis_km: Float
+  arg_of_pericenter: Float
+  eccentricity: Float
+  epoch: String
+  inclination_deg: Float
+  lifespan_years: Float
+  longitude: Float
+  mean_anomaly: Float
+  mean_motion: Float
+  periapsis_km: Float
+  period_min: Float
+  raan: Float
+  reference_system: String
+  regime: String
+  semi_major_axis_km: Float
+}
+type LaunchRocketFirstStageCore {
+  block: Int
+  core: Core
+  flight: Int
+  gridfins: Boolean
+  land_success: Boolean
+  landing_intent: Boolean
+  landing_type: String
+  landing_vehicle: String
+  legs: Boolean
+  reused: Boolean
+}
+
+type LaunchRocketFairings {
+  recovered: Boolean
+  recovery_attempt: Boolean
+  reused: Boolean
+  ship: String
+}
+
+type LaunchTelemetry {
+  flight_club: String
+}
+
+type Result {
+  totalCount: Int
+}
+
+type Link {
+  article: String
+  reddit: String
+  wikipedia: String
 }
 
 type Rocket {
