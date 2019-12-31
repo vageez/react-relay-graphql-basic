@@ -24,7 +24,6 @@ const App = () => {
         ROCKETS: () => <h1>SpaceX Rockets React Relay GraphQL</h1>,
         HISTORY: () => <h1>SpaceX Histories React Relay GraphQL</h1>,
       })} */}
-      {isPending ? " isPending..." : null}
       <nav>
         <button
           onClick={() => {
@@ -47,10 +46,11 @@ const App = () => {
 
         <button onClick={() => setResource(Pages.HISTORY)}>History</button>
       </nav>
+      {isPending ? " isPending..." : null}
 
       {resource.cata({
         HOME: () => 'Home',
-        ROCKETS: () => <Rockets />,
+        ROCKETS: () => <Suspense fallback={<h3>...Rockets</h3>}><Rockets /></Suspense>,
         HISTORY: () =>   <Suspense fallback={<h3>...Histories</h3>}><Histories /></Suspense>,
       })}
     </>
