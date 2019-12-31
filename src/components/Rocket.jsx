@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { createFragmentContainer, graphql } from 'react-relay'
 
 const Rocket = ({ rocket }) => {
@@ -14,17 +14,19 @@ const Rocket = ({ rocket }) => {
   } = rocket
 
   return (
-    <div>
-      <h1>{name}</h1>
-      <p>Active: {active}</p>
-      <p>Boosters: {boosters}</p>
-      <p>Company: {company}</p>
-      <p>Country: {country}</p>
-      <p>Type: {type}</p>
-      <p>
-        Wikipedia: <a href={wikipedia}>{name}</a>
-      </p>
-    </div>
+    <Suspense fallBack={<h1>...Loading Rockets</h1>}>
+      <div>
+        <h1>{name}</h1>
+        <p>Active: {active}</p>
+        <p>Boosters: {boosters}</p>
+        <p>Company: {company}</p>
+        <p>Country: {country}</p>
+        <p>Type: {type}</p>
+        <p>
+          Wikipedia: <a href={wikipedia}>{name}</a>
+        </p>
+      </div>
+    </Suspense>
   )
 }
 
