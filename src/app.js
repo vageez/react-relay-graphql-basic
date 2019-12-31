@@ -1,8 +1,15 @@
-import React, { useState, useTransition, Suspense } from 'react'
+import React, { Suspense, useState, useTransition } from 'react'
 import ReactDOM from 'react-dom'
-import Rockets from './components/Rockets.jsx'
-import Histories from './components/HistoriesResults.jsx'
 import { taggedSum } from 'daggy'
+/// Experimental
+import {
+  RelayEnvironmentProvider,
+  preloadQuery,
+  graphql,
+} from 'react-relay/hooks'
+import RelayEnvironment from './RelayEnvironment'
+/// Experimental
+import RocketsResult from './components/Rockets/RocketsResult.jsx'
 
 const Pages = taggedSum('Pages', {
   HOME: [],
@@ -10,26 +17,42 @@ const Pages = taggedSum('Pages', {
   HISTORY: [],
 })
 
-const initialState = Pages.HOME
+export const AppRocketsResultQuery = graphql`
+  query appQuery($limit: Int!, $offset: Int!) {
+    rocketsResult(limit: $limit, offset: $offset) {
+      result {
+        totalCount
+      }
+      data {
+        id
+        name
+        active
+        boosters
+        company
+        country
+        type
+        wikipedia
+      }
+    }
+  }
+`
+export const preloadedQuery = preloadQuery(
+  RelayEnvironment,
+  AppRocketsResultQuery,
+  { limit: 2, offset: 0 },
+)
 
 const App = () => {
-  const [resource, setResource] = useState(initialState)
+  const [resource, setResource] = useState(Pages.HOME)
   const [startTransition, isPending] = useTransition({
     timeoutMs: 100,
   })
   return (
     <>
-      {/* {resource.cata({
-        HOME: () => <h1>SpaceX React Relay GraphQL</h1>,
-        ROCKETS: () => <h1>SpaceX Rockets React Relay GraphQL</h1>,
-        HISTORY: () => <h1>SpaceX Histories React Relay GraphQL</h1>,
-      })} */}
       <nav>
         <button
           onClick={() => {
-            startTransition(() => {
-              setResource(Pages.ROCKETS)
-            })
+            startTransition(() => setResource(Pages.ROCKETS))
           }}
         >
           Rockets
@@ -41,18 +64,19 @@ const App = () => {
             })
           }}
         >
-          Concurrent History
+          History
         </button>
-
-        <button onClick={() => setResource(Pages.HISTORY)}>History</button>
       </nav>
-      {isPending ? " isPending..." : null}
-
-      {resource.cata({
-        HOME: () => 'Home',
-        ROCKETS: () => <Suspense fallback={<h3>...Rockets</h3>}><Rockets /></Suspense>,
-        HISTORY: () =>   <Suspense fallback={<h3>...Histories</h3>}><Histories /></Suspense>,
-      })}
+      {isPending && 'Is Pending...'}
+      <RelayEnvironmentProvider environment={RelayEnvironment}>
+        <Suspense fallback={'Loading...'}>
+          {resource.cata({
+            HOME: () => <div>Home</div>,
+            ROCKETS: () => <RocketsResult preloadedQuery={preloadedQuery} />,
+            HISTORY: () => <div>Histories</div>,
+          })}
+        </Suspense>
+      </RelayEnvironmentProvider>
     </>
   )
 }

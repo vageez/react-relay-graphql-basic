@@ -1,5 +1,4 @@
-import React, { Suspense } from 'react'
-import { createFragmentContainer, graphql } from 'react-relay'
+import React from 'react'
 
 const Rocket = ({ rocket }) => {
   const {
@@ -30,17 +29,4 @@ const Rocket = ({ rocket }) => {
   )
 }
 
-export default createFragmentContainer(Rocket, {
-  rocket: graphql`
-    fragment Rocket_rocket on Rocket {
-      id
-      name
-      active
-      boosters
-      company
-      country
-      type
-      wikipedia
-    }
-  `
-})
+export default Rocket

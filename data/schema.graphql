@@ -1,6 +1,12 @@
 type Query {
   rockets: [Rocket]
+  rocketsResult (limit: Int, offset: Int): RocketsResult
   historiesResult: HistoriesResult!
+}
+
+type RocketsResult {
+  result: Result
+  data: [Rocket]
 }
 
 type HistoriesResult {
